@@ -60,7 +60,9 @@ if __name__ == "__main__":
         my_map.get_bounds()
     except TypeError:
         print("Error: in get_bounds - check your input values, they must be numbers!")
-
-    print("Calculating bounds...")
+        print("Calculating bounds...")
+    
+    
+       
 
 
