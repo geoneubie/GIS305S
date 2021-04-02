@@ -19,8 +19,8 @@ def transform():
         for row in csv_dict:
             address = row["Street Address"] + " Boulder CO"
             print(address)
-            geocode_url = "https://goecoding.geo.census.gov/geocoder/locations/onelineaddress?address=" + address + \
-                "&benchmark=2020$format=json"
+            geocode_url = "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=" + address + \
+                "&benchmark=2020&format=json"
             r = requests.get(geocode_url)
             resp_dict = r.json()
             x = resp_dict['result']['addressMatches'][0]['coordinates']['x']
