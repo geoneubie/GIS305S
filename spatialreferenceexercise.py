@@ -21,4 +21,7 @@ sym.renderer.symbol.color = {'RGB': [255, 0, 0, 100]}
 sym.renderer.symbol.outlineColor = {'RGB': [0, 0, 0, 100]}
 lyr.symbology = sym
 lyr.transparency = 50
+# aprx.save()
+
+lyr.definitionQuery = "STATE_NAME = 'Colorado'"
 aprx.save()
