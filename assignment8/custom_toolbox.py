@@ -1,16 +1,11 @@
 import arcpy
 
-
 def intersect(layer_list, input_lyr_name):
-
     # Run a intersect analysis between the two buffer layers (needs to be a list of layers to intersect)
     arcpy.Intersect_analysis(layer_list, input_lyr_name)
 
-
-
 def buffer_layer(input_gdb, input_layer, dist):
     # Run a buffer analysis on the input_layer with a user specified distance
-
     # Distance units are always miles
     units = " miles"
     dist = dist + units
@@ -22,25 +17,20 @@ def buffer_layer(input_gdb, input_layer, dist):
                           dist, "FULL", "ROUND", "ALL")
     return output_layer
 
-
 def main():
-    # Define your workspace and point it at the modelbuilder.gdb
     arcpy.env.workspace = r"C:\Users\lbcem\Desktop\GIS305\week1\ModelBuilder\ModelBuilder.gdb\\"
     arcpy.env.overwriteOutput = True
 
     # Buffer cities
     input_gdb = r"C:\Users\lbcem\Desktop\GIS305\week1\data\Admin\AdminData.gdb\USA\\"
 
-    # Change me this next line below to use GetParamters!!
     dist = arcpy.GetParameterAsText(0)
 
     buf_cities = buffer_layer(input_gdb, "cities", dist)
 
-    # Change me this next line below to use GetParamters!!
     arcpy.AddMessage("Buffer layer " + buf_cities + " created.")
 
     # Buffer rivers
-    # Change me this next line below to use GetParamters!!
     dist = arcpy.GetParameterAsText(1)
     buf_rivers = buffer_layer(input_gdb, "us_rivers", dist)
     arcpy.AddMessage("Buffer layer " + buf_rivers + " created.")
@@ -48,7 +38,6 @@ def main():
     # Define lyr_list variable
     # with names of input layers to intersect
     # Ask the user to define an output layer name
-    # Change me this next line below to use GetParamters!!
     intersect_lyr_name = arcpy.GetParameterAsText(2)
     lyr_list = [buf_rivers, buf_cities]
     intersect(lyr_list, intersect_lyr_name)
