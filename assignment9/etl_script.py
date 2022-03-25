@@ -4,7 +4,7 @@ import csv
 
 def extract():
     print("Extracting addresses from google form spreadsheet")
-    r = requests.get("https://docs.google.com/spreadsheets/d/e/2PACX-1vTaJ_1xRhGQAOSITkgn_C1wfPSnPX0BA37XuftlXVfVrpjfj4J3BHPu1soGeUtNt3XjLI1G_HT2Fy69/pub?output=csv")
+    r = requests.get("https://docs.google.com/spreadsheets/d/e/2PACX-1vTDjitOlmILea7koCORJkq6QrUcwBJM7K3vy4guXB0mU_nWR6wsPn136bpH6ykoUxyYMW7wTwkzE37l/pub?output=csv")
     r.encoding = "utf-8"
     data = r.text
     with open(r"C:\Users\lbcem\Downloads\addresses.csv", "w") as output_file:
@@ -20,7 +20,7 @@ def transform():
         for row in csv_dict:
             address = row["Street Address"] + " Boulder CO"
             print(address)
-            geocode_url: "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=" + address + "&benchmark=2020&format=json"
+            geocode_url = "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=" + address + "&benchmark=2020&format=json"
             r = requests.get(geocode_url)
 
             resp_dict = r.json()
