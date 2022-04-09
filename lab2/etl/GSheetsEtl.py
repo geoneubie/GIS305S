@@ -30,7 +30,7 @@ class GSheetsEtl(SpatialEtl):
             for row in csv_dict:
                 address = row['Street Address'] + " Boulder CO"
                 print(address)
-                geocode_url = f"({self.config_dict.get('geocoder_prefix_url')} + {address} + {self.config_dict.get('geocoder_suffix_url')})"
+                geocode_url = f"({self.config_dict.get('geocoder_prefix_url')}{address}{self.config_dict.get('geocoder_suffix_url')})"
                 r = requests.get(geocode_url)
 
                 resp_dict = r.json()
