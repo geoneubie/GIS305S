@@ -1,5 +1,5 @@
 remote_url: 'https://docs.google.com/spreadsheets/d/1IPku5hDOyV7VZnZP-tgb18JNs6KSFTq_SLoCGNRRFd0/edit?resourcekey#gid=456960692'
-proj_dir: 'C:\Users\lbcem\Desktop\GIS305\lab1\WNVOutbreakPyProject'
+proj_dir: 'C:\Users\lbcem\Desktop\GIS305\lab1\WestNileOutbreak'
 data_format: 'GSheet'
 geocoder_prefix_url: "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address="
 geocoder_suffix_url: "&benchmark=2020&format=json"

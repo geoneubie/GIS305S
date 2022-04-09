@@ -2,31 +2,17 @@ import arcpy
 import yaml
 import requests
 from etl.GSheetsEtl import GSheetsEtl
-global config_dict
 
-# define default workspace
-arcpy.env.workspace = f"{config_dict.get('project_dir')}WestNileOutbreak.gdb"
-arcpy.env.overwriteOutput = True
-input_path =f"{config_dict.get('project_dir')}WestNileOutbreak.gdb{layer_name}"
-aprx = arcpy.mp.ArcGISProject(f"{config_dict.get('project_dir')}WestNileOutbreak.aprx")
-map_doc = aprx.listMaps()[0]
 
-# define layers
-address = input_path.format(layer_name=r"\Addresses")
-lakes = input_path.format(layer_name=r"\Lakes_Reservoirs")
-mosquito = input_path.format(layer_name=r"\Mosquito_Larva")
-osmp = input_path.format(layer_name=r"\OSMP_Properties")
-wetlands = input_path.format(layer_name=r"\Wetlands")
-avoid = input_path.format(layer_name=r"\Avoid_Points")
 
 def setup():
-    with open('config/wnvoutbreak.yaml') as f:
+    with open('wnvoutbreak.yaml') as f:
         config_dict = yaml.load(f, Loader=yaml.FullLoader)
     return config_dict
 
 def etl():
     print ("etling...")
-    etl_instance = GSheetsEtl("https://foo_bar.com", "C:/Users", "GSheets", "C:/Users/my.gdb")
+    etl_instance = GSheetsEtl(config_dict)
     etl_instance.process()
 
 # Define Buffer
@@ -56,6 +42,7 @@ def intersect(int_lyrs):
 
 # Define Main
 def main():
+
     # Define variables
     int_lyrs = []
     buf_lyrs = [lakes, mosquito, wetlands, osmp,avoid]
@@ -78,7 +65,8 @@ def main():
     count_lyr = (f"{config_dict.get('project_dir')}WestNileOutbreak.gdb\exposed_addresses")
     result = arcpy.GetCount_management(count_lyr)
     print("There are " + result[0] + " homes in the danger area.")
-
+    aprx = arcpy.mp.ArcGISProject(f"{config_dict.get('project_dir')}WestNileOutbreak.aprx")
+    map_doc = aprx.listMaps()[0]
     # Add new layer to map
     map_doc.addDataFromPath(f"{config_dict.get('project_dir')}WestNileOutbreak.gdb\exposed_addresses")
     aprx.save()
@@ -88,11 +76,25 @@ def main():
     map_doc.addDataFromPath(f"{config_dict.get('project_dir')}WestNileOutbreak.gdb\Areas_to_Spray")
     aprx.save()
 
-
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-
+    global config_dict
     config_dict = setup()
     print(config_dict)
+
+    arcpy.env.workspace = f"{config_dict.get('project_dir')}WestNileOutbreak.gdb"
+    arcpy.env.overwriteOutput = True
+    input_path = f"{config_dict.get('project_dir')}WestNileOutbreak.gdb"
+
+
+    # define layers
+    address = input_path.format(layer_name=r"\Addresses")
+    lakes = input_path.format(layer_name=r"\Lakes_Reservoirs")
+    mosquito = input_path.format(layer_name=r"\Mosquito_Larva")
+    osmp = input_path.format(layer_name=r"\OSMP_Properties")
+    wetlands = input_path.format(layer_name=r"\Wetlands")
+    avoid = input_path.format(layer_name=r"\Avoid_Points")
+
+
     etl()
     main()

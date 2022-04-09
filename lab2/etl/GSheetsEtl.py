@@ -1,6 +1,7 @@
 import requests
 import arcpy
-from SpatialEtl import SpatialEtl
+import csv
+from etl.SpatialEtl import SpatialEtl
 
 
 
@@ -9,7 +10,7 @@ class GSheetsEtl(SpatialEtl):
     config_dict = None
 
     def __init__(self,config_dict):
-        super().__init__(self.config_dict)
+        self.config_dict = config_dict
 
     def extract(self):
         print("Extracting addresses from google form spreadsheet")
@@ -27,7 +28,7 @@ class GSheetsEtl(SpatialEtl):
         with open(f"{self.config_dict.get('proj_dir')}addresses.csv", "r") as partial_file:
             csv_dict = csv.DictReader(partial_file, delimiter=",")
             for row in csv_dict:
-                address = row["Street Address"] + " Boulder CO"
+                address = row['Street Address'] + " Boulder CO"
                 print(address)
                 geocode_url = f"({self.config_dict.get('geocoder_prefix_url')} + {address} + {self.config_dict.get('geocoder_suffix_url')})"
                 r = requests.get(geocode_url)
@@ -41,7 +42,7 @@ class GSheetsEtl(SpatialEtl):
     def load(self):
 
         # local variables
-        in_table = open(f"{self.config_dict.get('proj_dir')}new_addresses.csv", "r")
+        in_table = open(f"{self.config_dict('proj_dir')}new_addresses.csv", "r")
         out_feature_class = "Avoid_Points"
         x_coords = "X"
         y_coords = "Y"
