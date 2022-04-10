@@ -17,7 +17,7 @@ class GSheetsEtl(SpatialEtl):
         r = requests.get(self.config_dict.get('remote_url'))
         r.encoding = "utf-8"
         data = r.text
-        with open(f"{self.config_dict.get('proj_dir')}addresses.csv", "w") as output_file:
+        with open(f"{self.config_dict.get('proj_dir')}address.csv", "w") as output_file:
             output_file.write(data)
 
     def transform(self):
@@ -25,7 +25,7 @@ class GSheetsEtl(SpatialEtl):
 
         transformed_file = open(f"{self.config_dict.get('proj_dir')}new_addresses.csv", "w")
         transformed_file.write("X,Y,Type\n")
-        with open(f"{self.config_dict.get('proj_dir')}addresses.csv", "r") as partial_file:
+        with open(f"{self.config_dict.get('proj_dir')}address.csv", "r") as partial_file:
             csv_dict = csv.DictReader(partial_file, delimiter=",")
             for row in csv_dict:
                 address = row['Street Address'] + " Boulder CO"
