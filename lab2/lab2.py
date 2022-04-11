@@ -3,12 +3,27 @@ import yaml
 import requests
 from etl.GSheetsEtl import GSheetsEtl
 
-
-
 def setup():
     with open('wnvoutbreak.yaml') as f:
         config_dict = yaml.load(f, Loader=yaml.FullLoader)
     return config_dict
+
+global config_dict
+config_dict = setup()
+print(config_dict)
+
+arcpy.env.workspace = rf"{config_dict.get('proj_dir')}\WestNileOutbreak.gdb\\"
+arcpy.env.overwriteOutput = True
+
+
+# define layers
+address = rf"{config_dict.get('proj_dir')}\WestNileOutbreak.gdb\Addresses"
+lakes = rf"{config_dict.get('proj_dir')}\WestNileOutbreak.gdb\Lakes_Reservoirs"
+mosquito = rf"{config_dict.get('proj_dir')}\WestNileOutbreak.gdb\Mosquito_Larva"
+osmp = rf"{config_dict.get('proj_dir')}\WestNileOutbreak.gdb\OSMP_Properties"
+wetlands = rf"{config_dict.get('proj_dir')}\WestNileOutbreak.gdb\Wetlands"
+avoid = rf"{config_dict.get('proj_dir')}\WestNileOutbreak.gdb\Avoid_Points"
+
 
 def etl():
     print ("etling...")
@@ -17,13 +32,13 @@ def etl():
 
 # Define Buffer
 def buffer(buf_lyr):
-    # ask user for buffer parameters
-    buf_out_name = (buf_lyr + "buf")
-    buf_dist_input = input("What is the buffer distance in feet? For the "+{buf_lyr}+" layer")
+
+    buf_out_name = input("What is the name of the buffer output for the " + buf_lyr + " layer?")
+    buf_dist_input = input("What is the buffer distance in feet?")
     buf_dist = buf_dist_input + " feet"
 
     # buffer analysis
-    result = arcpy.Buffer_analysis(buf_lyr, buf_out_name, buf_dist)
+    result = arcpy.Buffer_analysis(buf_lyr, buf_out_name, buf_dist,"FULL","ROUND","ALL")
 
     return buf_out_name;
 
@@ -43,9 +58,10 @@ def intersect(int_lyrs):
 # Define Main
 def main():
 
+
     # Define variables
     int_lyrs = []
-    buf_lyrs = [lakes, mosquito, wetlands, osmp,avoid]
+    buf_lyrs = [lakes, mosquito, wetlands, osmp, avoid]
 
     # Call buffer
     for lyr in buf_lyrs:
@@ -60,41 +76,29 @@ def main():
     arcpy.analysis.SpatialJoin(address, output_lyr_name, "WNV_Spatial")
 
     # Extra Credit
-    WNV_Spatial = f"{config_dict.get('project_dir')}WestNileOutbreak.gdb\WNV_Spatial"
+    WNV_Spatial = f"{config_dict.get('proj_dir')}\WestNileOutbreak.gdb\WNV_Spatial"
     arcpy.Select_analysis(WNV_Spatial, 'exposed_addresses', "Join_Count > 0")
-    count_lyr = (f"{config_dict.get('project_dir')}WestNileOutbreak.gdb\exposed_addresses")
+    count_lyr = (f"{config_dict.get('proj_dir')}\WestNileOutbreak.gdb\exposed_addresses")
     result = arcpy.GetCount_management(count_lyr)
     print("There are " + result[0] + " homes in the danger area.")
-    aprx = arcpy.mp.ArcGISProject(f"{config_dict.get('project_dir')}WestNileOutbreak.aprx")
+    aprx = arcpy.mp.ArcGISProject(f"{config_dict.get('proj_dir')}\WestNileOutbreak.aprx")
     map_doc = aprx.listMaps()[0]
     # Add new layer to map
-    map_doc.addDataFromPath(f"{config_dict.get('project_dir')}WestNileOutbreak.gdb\exposed_addresses")
+    map_doc.addDataFromPath(f"{config_dict.get('proj_dir')}\WestNileOutbreak.gdb\exposed_addresses")
     aprx.save()
 
     #symmetrical Difference
-    arcpy.SymDiff_analysis(output_lyr_name,"Avoid_Points_buf", "Areas_to_Spray", "ALL", None)
-    map_doc.addDataFromPath(f"{config_dict.get('project_dir')}WestNileOutbreak.gdb\Areas_to_Spray")
+    update_layer = input("What is the name of the Avoid areas buffer?")
+    arcpy.SymDiff_analysis(output_lyr_name,update_layer, "Areas_to_Spray", "ALL", None)
+    spray_areas = f"{config_dict.get('proj_dir')}\WestNileOutbreak.gdb\Areas_to_Spray"
+    new_at_risk = arcpy.SelectLayerByLocation_management(address,'INTERSECT',spray_areas)
+    result2= arcpy.GetCount_management(new_at_risk)
+    print("There are now " + result2[0] + " homes in the danger area after removing no spray zones.")
+    map_doc.addDataFromPath(f"{config_dict.get('proj_dir')}\WestNileOutbreak.gdb\Areas_to_Spray")
     aprx.save()
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    global config_dict
-    config_dict = setup()
-    print(config_dict)
-
-    arcpy.env.workspace = f"{config_dict.get('project_dir')}WestNileOutbreak.gdb"
-    arcpy.env.overwriteOutput = True
-    input_path = f"{config_dict.get('project_dir')}WestNileOutbreak.gdb"
-
-
-    # define layers
-    address = input_path.format(layer_name=r"\Addresses")
-    lakes = input_path.format(layer_name=r"\Lakes_Reservoirs")
-    mosquito = input_path.format(layer_name=r"\Mosquito_Larva")
-    osmp = input_path.format(layer_name=r"\OSMP_Properties")
-    wetlands = input_path.format(layer_name=r"\Wetlands")
-    avoid = input_path.format(layer_name=r"\Avoid_Points")
-
 
     etl()
     main()
