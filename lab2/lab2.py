@@ -61,7 +61,7 @@ def main():
 
     # Define variables
     int_lyrs = []
-    buf_lyrs = [lakes, mosquito, wetlands, osmp, avoid]
+    buf_lyrs = [lakes, mosquito, wetlands, osmp]
 
     # Call buffer
     for lyr in buf_lyrs:
@@ -87,14 +87,16 @@ def main():
     map_doc.addDataFromPath(f"{config_dict.get('proj_dir')}\WestNileOutbreak.gdb\exposed_addresses")
     aprx.save()
 
-    #symmetrical Difference
-    update_layer = input("What is the name of the Avoid areas buffer?")
-    arcpy.SymDiff_analysis(output_lyr_name,update_layer, "Areas_to_Spray", "ALL", None)
-    spray_areas = f"{config_dict.get('proj_dir')}\WestNileOutbreak.gdb\Areas_to_Spray"
+    # Symmetrical Difference displays the areas of no overlap between the intersect layer and the avoid point buffer.
+    # Erase removes the avoid point buffer from the intersect layer creating a new risk area.
+
+    update_layer =arcpy.Buffer_analysis(avoid, "avoid_buf", "1500 feet", "FULL", "ROUND", "ALL")
+    symdif = arcpy.SymDiff_analysis(output_lyr_name,update_layer, "Areas_to_Spray", "ALL", None)
+    spray_areas = arcpy.Erase_analysis(symdif,update_layer,"new_danger_area")
     new_at_risk = arcpy.SelectLayerByLocation_management(address,'INTERSECT',spray_areas)
     result2= arcpy.GetCount_management(new_at_risk)
     print("There are now " + result2[0] + " homes in the danger area after removing no spray zones.")
-    map_doc.addDataFromPath(f"{config_dict.get('proj_dir')}\WestNileOutbreak.gdb\Areas_to_Spray")
+    map_doc.addDataFromPath(rf"{config_dict.get('proj_dir')}\WestNileOutbreak.gdb\new_danger_area")
     aprx.save()
 
 # Press the green button in the gutter to run the script.
