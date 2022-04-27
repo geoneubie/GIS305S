@@ -2,11 +2,8 @@
 # GIS305 Spring 2022
 
 West nile virus simulation uses data retreived from Boulder County open data (https://opendata-bouldercounty.hub.arcgis.com/)
--Lakes and Reserviors
--Mosquito Larval Sites
--OSMP Properties
--Wetlands Regulatory
--Addresses
+
+-Lakes and Reserviors, Mosquito Larval Sites, OSMP Properties, Wetlands Regulatory, Addresses
 
 The simulation also uses google forms to input "no spray areas" (https://docs.google.com/forms/d/e/1FAIpQLSdH9uikBhEZw99hfJU5FJLyOBYMmSkCTuXRDozO2RPIrDPbKQ/viewform)
 
