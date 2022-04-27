@@ -14,7 +14,7 @@ The simulation allows the user to input buffer distances for the Lakes, Mosiquit
 Using Extract, transform, load (ETL) protocal data from the google form is transformed to point locations and then buffered at 1500 ft creating "avoid areas".
 
 
-The avoid areas are erased from the danger area creating an "analysis area" \n
+The avoid areas are erased from the danger area creating an "analysis area" 
 
 
 Addresses are spatially joined to the analysis area and added to the map with a definition query to only display addresses within the danger area.
@@ -27,8 +27,10 @@ The map is then exported displaying the results of the user inputs. (Data added 
 ## Running
 
 User should update included yaml file with new input parameters( file locations, database locations, etc)
+
 User should then run finalproject.py
 
-Exports included within directory location
+Exports included within directory location:
+
 /WestNileOutbreakwnv.log (logfile of functions and errors)
 /*userdefinedmapname*.pdf (pdf map displaying output)
