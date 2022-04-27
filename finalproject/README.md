@@ -8,7 +8,7 @@ West nile virus simulation uses data retreived from Boulder County open data (ht
 The simulation also uses google forms to input "no spray areas" (https://docs.google.com/forms/d/e/1FAIpQLSdH9uikBhEZw99hfJU5FJLyOBYMmSkCTuXRDozO2RPIrDPbKQ/viewform)
 
 
-The simulation allows the user to input buffer distances for the Lakes, Mosiquito, OSMP, and Wetlands layers, which are then intersected together creating a "danger area".
+The simulation allows the user to input buffer distances for the Lakes, Mosquito, OSMP, and Wetlands layers, which are then intersected together creating a "danger area".
 
 
 Using Extract, transform, load (ETL) protocal data from the google form is transformed to point locations and then buffered at 1500 ft creating "avoid areas".
