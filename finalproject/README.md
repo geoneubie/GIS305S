@@ -1,5 +1,5 @@
-## West Nile Virus Simulation
-# GIS305 Spring 2022
+# West Nile Virus Simulation
+## GIS305 Spring 2022
 
 West nile virus simulation uses data retreived from Boulder County open data (https://opendata-bouldercounty.hub.arcgis.com/)
 -Lakes and Reserviors, Mosquito Larval Sites, OSMP Properties, Wetlands Regulatory, Addresses
@@ -14,7 +14,7 @@ The simulation allows the user to input buffer distances for the Lakes, Mosiquit
 Using Extract, transform, load (ETL) protocal data from the google form is transformed to point locations and then buffered at 1500 ft creating "avoid areas".
 
 
-The avoid areas are erased from the danger area creating an "analysis area"
+The avoid areas are erased from the danger area creating an "analysis area" \n
 
 
 Addresses are spatially joined to the analysis area and added to the map with a definition query to only display addresses within the danger area.
@@ -24,7 +24,8 @@ The user can input a map subtitle (such as distances used), and an export file n
 The map is then exported displaying the results of the user inputs. (Data added to the map is not saved, as to allow for multiple runs of the program without adding duplicate layers.)
 
 
-# Running
+## Running
+
 User should update included yaml file with new input parameters( file locations, database locations, etc)
 User should then run finalproject.py
 
