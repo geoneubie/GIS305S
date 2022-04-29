@@ -1,22 +1,30 @@
 """
 GIS 305 Final Project (West Nile Virus Outbreak Simulation) GSheets Header file
-Spring 2022
-Author: Charles Myers
-Allows for transformation of data from survey into usable analysis data
+Performs extract, transform, load process using a google spreadsheet URL.
+The Spreadsheet must contain address and zipcode columns.
+
+params: config_dict (dictionary containing paths to url, geocoding, files)
 """
 import requests
 import arcpy
 import csv
 import logging
+
 from etl.SpatialEtl import SpatialEtl
 
 
 class GSheetsEtl(SpatialEtl):
-
+    """
+    Performs extract, transform, load process using a google spreadsheet URL.
+    The Spreadsheet must contain address and zipcode columns.
+    Params: config_dict (dictionary containing paths to url, geocoding, files)
+    Returns: extracts data from url to program directory
+    """
     config_dict = None
 
     def __init__(self,config_dict):
         self.config_dict = config_dict
+
 
     def extract(self):
         """
