@@ -61,5 +61,8 @@ if __name__ == "__main__":
     except TypeError:
         print('Error: in get_bounds - input values must be numbers!')
 
+print("\nThe try and except already seemed to be added to the fork, I think. At least, it was here when I opened it up.\n"
+"I added this line so I had changes to commit that you could see.\nThere's a chance I misunderstood, in which case I apologize.")
+
 
 
