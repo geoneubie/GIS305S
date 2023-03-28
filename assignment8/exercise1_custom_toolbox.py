@@ -15,7 +15,7 @@ def buffer_layer(input_gdb, input_layer, dist):
     units = " miles"
     dist = dist + units
     # Output layer will always be named input layer + "_buf
-    output_layer = r"C:\Users\David Neufeld\Documents\ArcGIS\GIS305\Projects\ModelBuilder\ModelBuilder.gdb\\" + input_layer + "_buf"
+    output_layer = r"C:\Users\hcvin\OneDrive\Desktop\Spring_2023\GIS_3005\week1\Week1_GIS3005\Week1_GIS3005.gdb\\" + input_layer + "_buf"
     # Always use buffer parameters FULL, ROUND, ALL
     buf_layer = input_gdb + input_layer
     arcpy.Buffer_analysis(buf_layer, output_layer,
@@ -24,44 +24,52 @@ def buffer_layer(input_gdb, input_layer, dist):
 
 
 def main():
+    #print("in main")
     # Define your workspace and point it at the modelbuilder.gdb
-    arcpy.env.workspace = r"C:\Users\David Neufeld\Documents\ArcGIS\GIS305\Projects\ModelBuilder\ModelBuilder.gdb\\"
+    arcpy.env.workspace = r"C:\Users\hcvin\OneDrive\Desktop\Spring_2023\GIS_3005\week1\Week1_GIS3005\Week1_GIS3005.gdb\\"
     arcpy.env.overwriteOutput = True
+    arcpy.env.addOutputsToMap = True
 
     # Buffer cities
-    input_gdb = r"C:\Users\David Neufeld\Documents\ArcGIS\GIS305\Data\Admin\AdminData.gdb\USA\\"
+    input_gdb = r"C:\Users\hcvin\OneDrive\Desktop\Spring_2023\GIS_3005\week1\Admin\AdminData.gdb\USA\\"
 
     # Change me this next line below to use GetParamters!!
-    dist = input("What buffer distance do you want to use?")
+#    dist = arcpy.GetParameterAsText("What buffer distance do you want to use?")
+    dist = arcpy.GetParameterAsText(0)
+    #print("are we getting after 0 getparam")
 
     buf_cities = buffer_layer(input_gdb, "cities", dist)
 
     # Change me this next line below to use GetParamters!!
-    print("Buffer layer " + buf_cities + " created.")
+    #print("Buffer layer " + buf_cities + " created.")
 
     # Buffer rivers
     # Change me this next line below to use GetParamters!!
-    dist = input("What buffer distance do you want to use?")
+    # dist = arcpy.GetParameterAsText("What buffer distance do you want to use?")
+    dist = arcpy.GetParameterAsText(1)
     buf_rivers = buffer_layer(input_gdb, "us_rivers", dist)
-    print("Buffer layer " + buf_rivers + " created.")
+    #print("Buffer layer " + buf_rivers + " created.")
 
     # Define lyr_list variable
     # with names of input layers to intersect
     # Ask the user to define an output layer name
-    # Change me this next line below to use GetParamters!!
-    intersect_lyr_name = input("What is the name for your output layer resulting from the intersect analysis? ")
+
+    intersect_lyr_name = arcpy.GetParameterAsText(2)
     lyr_list = [buf_rivers, buf_cities]
     intersect(lyr_list, intersect_lyr_name)
-    print(f"New intersect layer generated called: {intersect_lyr_name}")
+    #print(f"New intersect layer generated called: {intersect_lyr_name}")
 
     # Get the project
-    aprx = arcpy.mp.ArcGISProject(
-        r"c:\Users\David Neufeld\Documents\ArcGIS\GIS305\Projects\ModelBuilder\ModelBuilder.ap"
-        r"rx")
-    map_doc = aprx.listMaps()[0]
-    map_doc.addDataFromPath(rf"C:\Users\David Neufeld\Documents\ArcGIS\GIS305\Projects\ModelBuilder\ModelBuilder.gdb\{intersect_lyr_name}")
+    proj_path = r"C:\Users\hcvin\OneDrive\Desktop\Spring_2023\GIS_3005\week1\Week1_GIS3005"
+    aprx = arcpy.mp.ArcGISProject(fr"{proj_path}\Week1_GIS3005.aprx")
 
-    aprx.save()
+    print(aprx.listMaps()[0].name)
+
+    map_doc = aprx.listMaps()[0]
+
+    map_doc.addDataFromPath(rf"{proj_path}\Week1_GIS3005.gdb\{intersect_lyr_name}")
+
+    aprx.saveACopy(r"C:\Users\hcvin\OneDrive\Desktop\Spring_2023\GIS_3005\week1\Week1_GIS3005\assignment8_test.aprx")
 
 
 if __name__ == '__main__':
