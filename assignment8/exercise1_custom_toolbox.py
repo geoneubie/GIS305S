@@ -69,8 +69,7 @@ def main():
 
     map_doc.addDataFromPath(rf"{proj_path}\Week1_GIS3005.gdb\{intersect_lyr_name}")
 
-    aprx.saveACopy(r"C:\Users\hcvin\OneDrive\Desktop\Spring_2023\GIS_3005\week1\Week1_GIS3005\assignment8_test.aprx")
-
+    aprx.save()
 
 if __name__ == '__main__':
     main()
