@@ -38,7 +38,6 @@ def etl():
 
 if __name__ == '__main__':
     setup()
-    extract()
     etl()
 
     # buff_layer_list = ["Mosquito_Larval_Sites", "Wetlands", "Lakes_and_Reservoirs", "OSMP_Properties"]
