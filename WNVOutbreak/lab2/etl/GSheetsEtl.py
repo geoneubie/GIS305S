@@ -1,4 +1,4 @@
-from SpatialEtl import SpatialEtl
+from etl.SpatialEtl import SpatialEtl
 
 
 class GSheetsEtl(SpatialEtl):

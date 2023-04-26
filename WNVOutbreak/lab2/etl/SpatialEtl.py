@@ -1,7 +1,6 @@
 import arcpy
 import requests
 import csv
-
 class SpatialEtl:
 
     def __int__(self, remote, local_dir, data_format, destination):

@@ -1,5 +1,5 @@
 import arcpy  # import the arcpy library
-
+from etl.GSheetsEtl import GSheetsEtl
 
 # Defining a function that will set our workspace, allow us to overwrite files, and allows us to add outputs to the map
 def setup():
@@ -7,8 +7,13 @@ def setup():
     arcpy.env.overwriteOutput = True
     arcpy.env.addOutputsToMap = True
 
-def extract():
-    print("Extracting addresses from google form spreadsheet")
+
+def etl():
+    print("testing etl")
+    etl_instance = GSheetsEtl("https://foo_bar.com", "C:Users", "GSheets",
+                              r"C:\Users\hcvin\OneDrive\Desktop\Spring_2023\GIS_3005\arcgis\westnileoutbreak\WestNileOutbreak.gdb")
+    etl_instance.process()
+
 #
 # def buffer(layer_name, buff_dist):
 #     # Buffer the chosen layer by a set distance
@@ -34,6 +39,7 @@ def extract():
 if __name__ == '__main__':
     setup()
     extract()
+    etl()
 
     # buff_layer_list = ["Mosquito_Larval_Sites", "Wetlands", "Lakes_and_Reservoirs", "OSMP_Properties"]
     # inter_layer_list = []
