@@ -1,7 +1,7 @@
 
 class SpatialEtl:
 
-    def __int__(self, remote, local_dir, data_format, destination):
+    def __init__(self, remote, local_dir, data_format, destination):
         self.remote = remote
         self.local_dir = local_dir
         self.data_format = data_format
