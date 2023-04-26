@@ -1,20 +1,19 @@
 import arcpy  # import the arcpy library
 from etl.GSheetsEtl import GSheetsEtl
-
-# Defining a function that will set our workspace, allow us to overwrite files, and allows us to add outputs to the map
-def setup():
-    arcpy.env.workspace = r"C:\Users\hcvin\OneDrive\Desktop\Spring_2023\GIS_3005\arcgis\westnileoutbreak\WestNileOutbreak.gdb"
-    arcpy.env.overwriteOutput = True
-    arcpy.env.addOutputsToMap = True
-
+from etl.SpatialEtl import SpatialEtl
 
 def etl():
-    print("testing etl")
-    etl_instance = GSheetsEtl("https://foo_bar.com", "C:Users", "GSheets",
-                              r"C:\Users\hcvin\OneDrive\Desktop\Spring_2023\GIS_3005\arcgis\westnileoutbreak\WestNileOutbreak.gdb")
+    print("Testing etl")
+    etl_instance = GSheetsEtl("https://foo_bar.com", "C:Users", "GSheets", "C:/Users/my.gdb")
     etl_instance.process()
 
-#
+# Defining a function that will set our workspace, allow us to overwrite files, and allows us to add outputs to the map
+# def setup():
+#     arcpy.env.workspace = r"C:\Users\hcvin\OneDrive\Desktop\Spring_2023\GIS_3005\arcgis\westnileoutbreak\WestNileOutbreak.gdb"
+#     arcpy.env.overwriteOutput = True
+#     arcpy.env.addOutputsToMap = True
+
+
 # def buffer(layer_name, buff_dist):
 #     # Buffer the chosen layer by a set distance
 #     output_buffer = f"buff_{layer_name}"
@@ -37,7 +36,7 @@ def etl():
 #
 
 if __name__ == '__main__':
-    setup()
+    #setup()
     etl()
 
     # buff_layer_list = ["Mosquito_Larval_Sites", "Wetlands", "Lakes_and_Reservoirs", "OSMP_Properties"]
@@ -76,7 +75,7 @@ if __name__ == '__main__':
     # proj_path = r"C:\Users\hcvin\OneDrive\Desktop\Spring_2023\GIS_3005\arcgis\westnileoutbreak"
     # aprx = arcpy.mp.ArcGISProject(rf"{proj_path}\WestNileOutbreak.aprx")
     # map_doc = aprx.listMaps()[0]
-
+    #
     # # Adds the spatial join output to the map
     # map_doc.addDataFromPath(rf"{proj_path}\WestNileOutbreak.gdb\{output_sjoin}")
     #
