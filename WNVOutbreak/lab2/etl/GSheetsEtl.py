@@ -1,22 +1,21 @@
 
-
-
 import requests
 from SpatialEtl import SpatialEtl
 
 class GSheetsEtl(SpatialEtl):
+
     config_dict = None
     def __init__(self, config_dict):
         super().__init__(self.config_dict)
 
     def extract(self):
         print("Extracting addresses from google form spreadsheet")
-
         r = requests.get(self.config_dict.get('remote_url'))
         r.encoding = "utf-8"
         data = r.text
         with open(f"{self.config_dict.get('proj_dir')}addresses.csv", "w") as output_file:
             output_file.write(data)
+
 
     def transform(self):
         print("Add City, State")
@@ -28,7 +27,8 @@ class GSheetsEtl(SpatialEtl):
             for row in csv_dict:
                 address = row["Street Address"] + " Boulder CO"
                 print(address)
-                geocode_url = self.config_dict.get('geocoder_prefix_url')+ address + self.config_dict.get('geocoder_suffix_url')
+                geocode_url = self.config_dict.get('geocoder_prefix_url' )+ address + self.config_dict.get \
+                    ('geocoder_suffix_url')
                 print(geocode_url)
                 r = requests.get(geocode_url)
 
@@ -56,4 +56,3 @@ class GSheetsEtl(SpatialEtl):
         self.extract()
         self.transform()
         self.load()
-

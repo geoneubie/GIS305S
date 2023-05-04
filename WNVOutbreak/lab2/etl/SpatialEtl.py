@@ -1,4 +1,5 @@
 import yaml
+import requests
 class SpatialEtl:
 
     def __init__(self, config_dict):
