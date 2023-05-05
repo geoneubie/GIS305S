@@ -1,6 +1,8 @@
+import requests
 import yaml
 import arcpy  # import the arcpy library
 from GSheetsEtl import GSheetsEtl
+
 
 
 
