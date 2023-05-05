@@ -6,10 +6,12 @@ from SpatialEtl import SpatialEtl
 
 
 class GSheetsEtl(SpatialEtl):
+    # creates a class called GsheetsETL that uses the SpatialEtl class
     def __init__(self, config_dict):
         super().__init__(config_dict)
 
     def extract(self):
+        # downloads and pulls out the data
         print("Extracting addresses from google form spreadsheet")
         r = requests.get(self.config_dict.get('remote_url'))
         r.encoding = "utf-8"
@@ -22,6 +24,7 @@ class GSheetsEtl(SpatialEtl):
 
         transformed_file = open(f"{self.config_dict.get('proj_dir')}new_addresses.csv", "w")
         transformed_file.write("X,Y,Type\n")
+        # opens the file from the extract function, geocodes the data and adds it to a new CSV file
         with open(f"{self.config_dict.get('proj_dir')}addresses.csv", "r") as partial_file:
             csv_dict = csv.DictReader(partial_file, delimiter=',')
             for row in csv_dict:

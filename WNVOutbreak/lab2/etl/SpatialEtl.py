@@ -14,9 +14,6 @@ class SpatialEtl:
     def load(self):
         print(f"Loading data into {self.config_dict.get('proj_dir')}")
 
-        # self.local_dir = local_dir
-        # self.data_format = data_format
-        # self.destination = destination
 
 
 
