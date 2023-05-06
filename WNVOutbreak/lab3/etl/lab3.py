@@ -11,18 +11,16 @@ def setup():
     with open('config/wnvoutbreak.yaml') as f:
         config_dict = yaml.load(f, Loader=yaml.FullLoader)
 
-    logging.basicConfig(level = logging.INFO,
+    logging.basicConfig(level=logging.DEBUG,
                         format="%(name)s - "
                                "%(levelname)s - "
                                "%(message)s",
-                        handlers = [logging.FileHandler(f"{config_dict.get('proj_dir')}wnv.log"),
-                                    logging.StreamHandler(sys.stdout)])
+                        handlers=[logging.FileHandler(f"{config_dict.get('proj_dir')}wnv.log")])
+                        # , logging.StreamHandler(sys.stdout)])
+                        # Remove pound sign above and ]) at the end of ...wnv.log") to have logging messages to print
+                        # to console as well
     logging.debug("Exiting the setup function")
     return config_dict
-
-
-
-
 
 
 def etl():
