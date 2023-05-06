@@ -1,7 +1,7 @@
 # my log practice module
 import logging
 
-logging.basicConfig(level=logging.ERROR,
+logging.basicConfig(level=logging.DEBUG,
                     filename = "app.log",
                     filemode= "w",
                     format="%(name)s - "
