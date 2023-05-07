@@ -10,7 +10,7 @@ def setup():
     # open and load in the yaml file, so it can be referenced as config_dict
     with open('config/wnvoutbreak.yaml') as f:
         config_dict = yaml.load(f, Loader=yaml.FullLoader)
-
+    # Use logging to create a file that prints statements based on the level
     logging.basicConfig(level=logging.DEBUG,
                         format="%(name)s - "
                                "%(levelname)s - "
@@ -69,6 +69,23 @@ def sym_diff(lyr_inter):
     return out_sym_diff
 
 
+def exportMap():
+    logging.debug("Starting export map function")
+    # create a variable that is equal to the layout
+    aprx = arcpy.mp.ArcGISProject(rf"{config_dict.get('proj_dir')}arcgis\westnileoutbreak\WestNileOutbreak.aprx")
+    lyt = aprx.listLayouts()[0]
+    # Add a subtitle after the element "Title"
+    subtitle = input("Please enter a subtitle for the output map.\n")
+    for el in lyt.listElements():
+        logging.info(el.name)
+        if "Title" in el.name:
+            el.text = el.text + subtitle
+    # export the layout to a pdf
+    lyt.exportToPDF(rf"{config_dict.get('proj_dir')}WestNileOutbreak{subtitle}.pdf")
+    logging.info(rf"Created a pdf of your map namedWestNileOutbreak{subtitle}.pdf located {config_dict.get('proj_dir')}")
+    logging.debug("Exiting export map function")
+
+
 def main():
     logging.info('Starting West Nile Virus Simulation main')
     # created a list of the layers to be buffered
@@ -104,7 +121,7 @@ def main():
     map_doc = aprx.listMaps()[0]
 
     # Adds the intersect layer missing the buffer around the avoid points output to the map
-    map_doc.addDataFromPath(rf"{proj_path}\{lyr_sym_diff}")
+    # map_doc.addDataFromPath(rf"{proj_path}\{lyr_sym_diff}")
     # Saves the project
     aprx.save()
 
@@ -124,6 +141,7 @@ def main():
 
     aprx.save()
 
+
     logging.debug("Exiting West Nile Virus Simulation main")
 
 
@@ -133,3 +151,4 @@ if __name__ == '__main__':
     print(config_dict)
     etl()
     main()
+    exportMap()
