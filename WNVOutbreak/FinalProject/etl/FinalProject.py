@@ -3,6 +3,8 @@ import yaml
 import arcpy  # import the arcpy library
 from GSheetsEtl import GSheetsEtl  # import the ETL functions created
 import logging
+
+
 import sys
 
 
@@ -21,6 +23,7 @@ def setup():
                         # to console as well
     logging.debug("Exiting the setup function")
     return config_dict
+
 
 
 def etl():
@@ -74,6 +77,7 @@ def exportMap():
     # create a variable that is equal to the layout
     aprx = arcpy.mp.ArcGISProject(rf"{config_dict.get('proj_dir')}arcgis\westnileoutbreak\WestNileOutbreak.aprx")
     lyt = aprx.listLayouts()[0]
+
     # Add a subtitle after the element "Title"
     subtitle = input("Please enter a subtitle for the output map.\n")
     for el in lyt.listElements():
@@ -88,24 +92,53 @@ def exportMap():
 
 def main():
     logging.info('Starting West Nile Virus Simulation main')
+
+    # Setting a variable equal to the geodatabase, aprx, and the map document
+    geodb = f"{config_dict.get('proj_dir')}arcgis\westnileoutbreak\WestNileOutbreak.gdb"
+    aprx = arcpy.mp.ArcGISProject(rf"{config_dict.get('proj_dir')}arcgis\westnileoutbreak\WestNileOutbreak.aprx")
+    map_doc = aprx.listMaps()[0]
+
+    sp_co_north = arcpy.SpatialReference(102653)
+    map_doc.spatialReference = sp_co_north
+
+    # Maplyers is an empty list that will be appended with layer names as they are added to the map document
+    maplyrs = []
     # created a list of the layers to be buffered
     buff_layer_list = ["Mosquito_Larval_Sites", "Wetlands", "Lakes_and_Reservoirs", "OSMP_Properties"]
+
+    # for loop adds the layers to be buffered to the map and then saves the project
+    for layer in buff_layer_list:
+        map_doc.addDataFromPath(rf"{geodb}\{layer}")
+        maplyrs.append(layer)
+
+    mos_lar_site = map_doc.listLayers("Mosquito_Larval_Sites")[0]
+    mos_lar_site_sym = mos_lar_site.symbology
+    mos_lar_site_sym.renderer.symbol.color = {'RGB': [255, 255, 115, 100]}
+    mos_lar_site_sym.renderer.symbol.outlineColor = {'RGB': [0, 0, 0, 100]}
+
+    lake_site = map_doc.listLayers("Mosquito_Larval_Sites")[0]
+    lake_site_sym = lake_site.symbology
+    lake_site_sym.renderer.symbol.color = {'RGB': [0, 169, 230, 100]}
+    lake_site_sym.renderer.symbol.outlineColor = {'RGB': [0, 113, 245, 100]}
+
+    aprx.save()
 
     for layer in buff_layer_list:
         # Goes through the list of layers that need to be buffered and runs the buffer function on each one
         buff_dist = input(f"\nHow far would you like to buffer {layer}\n")
         buffer(layer, buff_dist)
 
-        # a list of the output layers after being buffered
+    # a list of the output layers after being buffered
     inter_layer_list = ["buff_Mosquito_Larval_Sites", "buff_Wetlands", "buff_Lakes_and_Reservoirs",
                         "buff_OSMP_Properties"]
+
     # assigns the return form the intersect function to the variable lyr_inter and runs the function
     lyr_inter = intersect(inter_layer_list)
     logging.info(f"Creating a layer named {lyr_inter} that shows where the layers:\n{inter_layer_list} intersect.")
 
+    # Asks for input on how far to buffer the avoid points
     avoid_buff_dist = input("There are some addresses that have opted-out of pesticide spraying.\n"
                             "How many feet would you like to avoid spraying around these addresses?\n")
-
     avoid_points = "avoid_points"
     # Runs the buffer function on the avoid points, so we have a polygon to use in the sym_diff function
     buffer(avoid_points, avoid_buff_dist)
@@ -113,23 +146,15 @@ def main():
     # returned output
     lyr_sym_diff = sym_diff(lyr_inter)
     logging.info(f"Removing opt-out areas to create a new layer named {lyr_sym_diff}")
-
-    # creates a variable equal to  project path to the geodatabase
-    proj_path = f"{config_dict.get('proj_dir')}arcgis\westnileoutbreak\WestNileOutbreak.gdb"
-    # creates a variable equal to  project path to the aprx
-    aprx = arcpy.mp.ArcGISProject(rf"{config_dict.get('proj_dir')}arcgis\westnileoutbreak\WestNileOutbreak.aprx")
-    map_doc = aprx.listMaps()[0]
-
-    # Adds the intersect layer missing the buffer around the avoid points output to the map
-    # map_doc.addDataFromPath(rf"{proj_path}\{lyr_sym_diff}")
-    # Saves the project
+    # Adds intersect layer that does not include the avoid points buffer to map and maplrys list then saves project
+    map_doc.addDataFromPath(rf"{geodb}\{lyr_sym_diff}")
+    maplyrs.append(lyr_sym_diff)
     aprx.save()
 
     # Runs the spatial join function on the output from the sym_diff function
     lyr_sjoin = spatial_join(lyr_sym_diff)
 
     addAOCCount = 0
-
     with arcpy.da.SearchCursor(lyr_sjoin, ["Join_Count"]) as joinCursor:
         for x in joinCursor:
             # Creating a search cursor and iteration through the attributes in the Join_Count field
@@ -141,9 +166,7 @@ def main():
 
     aprx.save()
 
-
     logging.debug("Exiting West Nile Virus Simulation main")
-
 
 if __name__ == '__main__':
     global config_dict
