@@ -1,5 +1,5 @@
 remote_url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRJ-grk0VheQtXnfo2YefVsJ2wVz-7-VfPtlfkXD9DOoX2nbNM9SFsfYx20LKnboBQfOjcyo3fioyvt/pub?output=csv'
-proj_dir: 'C:\Users\hcvin\OneDrive\Desktop\Spring_2023\GIS_3005\'
+proj_dir: 'C:\Users\hcvin\OneDrive\Desktop\Spring_2023\GIS_3005\arcgis\westnileoutbreak\'
 data_format: 'Gsheet'
 geocoder_prefix_url: 'https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address='
 geocoder_suffix_url: '&benchmark=2020&format=json'
